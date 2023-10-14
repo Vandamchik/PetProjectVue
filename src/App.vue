@@ -1,11 +1,15 @@
-<script setup lang="ts">
+<template>
+  <router-view />
+</template>
+
+<script>
 
 </script>
 
-<template>
- <h1>hello</h1>
-</template>
-
-<style scoped lang="scss">
-
+<style lang="scss">
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 </style>
