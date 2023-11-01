@@ -1,6 +1,6 @@
 <template>
   <ul>
-    <li>Login</li>
+    <router-link to="/auth" >Authenticate</router-link >
     <li>Section 1</li>
     <li>Section 2</li>
   </ul>

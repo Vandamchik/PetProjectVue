@@ -1,68 +1,91 @@
 <template>
   <form @submit.prevent="loginHandler" class="form-container">
     <base-input
-        v-model.trim="formData.email"
-        type="email"
-        title-label="Email:"
-        placeholder="Enter your email"
-        :isValid="isValidEmail"
-        @blur="validateEmail"
+      v-model.trim="formData.email"
+      type="email"
+      title-label="Email:"
+      placeholder="Enter your email"
+      :isValid="isValidEmail"
+      @blur="validateEmail"
+      id="emailLogin"
     />
     <base-input
         v-model.trim="formData.password"
-        type="password"
+        :type="showPassword ? 'text' : 'password'"
         title-label="Password:"
         placeholder="Password must be safe"
         :isValid="isValidPassword"
         @blur="validatePassword"
+        id="passwordRegistration"
+    />
+    <base-checkbox
+        @showPassword="checkboxHandler"
+        title-label="Show Password"
     />
     <base-button
-        btn-title="Registration"
-        type="submit"
+      btn-title="Login"
+      type="submit"
     />
   </form>
 </template>
 
-<script setup>
-import { reactive } from 'vue';
-import BaseInput from "../../UI/BaseInput.vue";
-import BaseButton from "../../UI/SubmitButton.vue";
+<script>
+import { reactive, ref } from 'vue';
 
+export default {
 
-const formData = reactive({
-  email: '',
-  password: '',
-});
-const isValidEmail = reactive({
-  status: 'pending',
-  message: 'Please enter valid email!'
-});
-const isValidPassword = reactive({
-  status: 'pending',
-  message: 'Password must contains more than 6 symbols',
-});
+  setup() {
+    const formData = reactive({
+      email: '',
+      password: '',
+    });
+    const isValidEmail = reactive({
+      status: 'pending',
+      message: 'Please enter valid email!'
+    });
+    const isValidPassword = reactive({
+      status: 'pending',
+      message: 'Password must contains more than 6 symbols',
+    });
+    const showPassword = ref(false);
 
-function loginHandler() {
-  console.log(formData.email)
-  console.log(formData.password)
-}
+    function loginHandler() {
+      console.log("loginForm",formData.email)
+      console.log("loginForm",formData.password)
+    }
 
-function validateEmail() {
-  if (formData.email.includes('@') && formData.email.length > 0) {
-    isValidEmail.status = 'valid';
-  } else {
-    isValidEmail.status = 'invalid';
+    function checkboxHandler(data) {
+      showPassword.value = data
+    }
+
+    function validateEmail() {
+      if (formData.email.includes('@') && formData.email.length > 0) {
+        isValidEmail.status = 'valid';
+      } else {
+        isValidEmail.status = 'invalid';
+      }
+    }
+
+    function validatePassword() {
+      if (formData.password.length > 6) {
+        isValidPassword.status = 'valid';
+      } else {
+        isValidPassword.status = 'invalid';
+      }
+    }
+
+    return {
+      isValidEmail,
+      isValidPassword,
+      formData,
+      showPassword,
+      checkboxHandler,
+      validateEmail,
+      validatePassword,
+      loginHandler
+    }
   }
 }
-
-function validatePassword() {
-  if (formData.password.length > 6) {
-    isValidPassword.status = 'valid';
-  } else {
-    isValidPassword.status = 'invalid';
-  }
-}
-
 </script>
 
 <style lang="scss" scoped>
