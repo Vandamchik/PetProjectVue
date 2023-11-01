@@ -1,10 +1,12 @@
 <template>
   <div class="input-wrapper">
-    <label v-if="titleLabel" class="input-label">{{ titleLabel }}</label>
+    <label v-if="titleLabel" class="input-label" :for="id">{{ titleLabel }}</label>
     <input
       class="main-input"
+      :id="id"
+      :name="id"
       :class="{ invalid: isValid.status === 'invalid'}"
-      type="text"
+      :type="type"
       :value="modelValue"
       @input="$emit('update:modelValue', $event.target.value)"
       v-bind="$attrs"
@@ -25,6 +27,14 @@ defineProps({
   modelValue: {
     type: String,
     default: ''
+  },
+  id: {
+    type: String,
+    default: ''
+  },
+  type: {
+    required: false,
+    type: String
   },
   isValid: {
     required: false,
