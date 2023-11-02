@@ -1,22 +1,22 @@
 <template>
   <form @submit.prevent="loginHandler" class="form-container">
     <base-input
-      v-model.trim="formData.email"
+      v-model.trim="email"
+      :isValid="isValidEmail"
       type="email"
       title-label="Email:"
       placeholder="Enter your email"
-      :isValid="isValidEmail"
-      @blur="validateEmail"
       id="emailLogin"
+      notValidMessage="Please wright correct email address"
     />
     <base-input
-        v-model.trim="formData.password"
+        v-model.trim="password"
+        :isValid="isValidPassword"
         :type="showPassword ? 'text' : 'password'"
         title-label="Password:"
         placeholder="Password must be safe"
-        :isValid="isValidPassword"
-        @blur="validatePassword"
         id="passwordRegistration"
+        notValidMessage="Password must be have more than 6 symbols"
     />
     <base-checkbox
         @showPassword="checkboxHandler"
@@ -30,58 +30,41 @@
 </template>
 
 <script>
-import { reactive, ref } from 'vue';
+import { ref } from 'vue';
+import { isPassValid, isEmail } from '../../utils/validation/formValidation.js';
+import useInputHook from "../../hooks/useInputHook.js";
 
 export default {
 
   setup() {
-    const formData = reactive({
-      email: '',
-      password: '',
-    });
-    const isValidEmail = reactive({
-      status: 'pending',
-      message: 'Please enter valid email!'
-    });
-    const isValidPassword = reactive({
-      status: 'pending',
-      message: 'Password must contains more than 6 symbols',
-    });
+    const {
+      inputValue: email,
+      isInputValid: isValidEmail ,
+    } = useInputHook('', isEmail);
+    const {
+      inputValue: password,
+      isInputValid: isValidPassword
+    } = useInputHook('', isPassValid)
     const showPassword = ref(false);
 
     function loginHandler() {
-      console.log("loginForm",formData.email)
-      console.log("loginForm",formData.password)
+      console.group([
+        'Login from data',email.value, password.value
+      ]);
     }
 
     function checkboxHandler(data) {
       showPassword.value = data
     }
 
-    function validateEmail() {
-      if (formData.email.includes('@') && formData.email.length > 0) {
-        isValidEmail.status = 'valid';
-      } else {
-        isValidEmail.status = 'invalid';
-      }
-    }
-
-    function validatePassword() {
-      if (formData.password.length > 6) {
-        isValidPassword.status = 'valid';
-      } else {
-        isValidPassword.status = 'invalid';
-      }
-    }
 
     return {
-      isValidEmail,
-      isValidPassword,
-      formData,
+      email,
+      password,
       showPassword,
       checkboxHandler,
-      validateEmail,
-      validatePassword,
+      isValidEmail,
+      isValidPassword,
       loginHandler
     }
   }

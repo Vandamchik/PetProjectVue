@@ -5,16 +5,16 @@
       class="main-input"
       :id="id"
       :name="id"
-      :class="{ invalid: isValid.status === 'invalid'}"
+      :class="{ invalid: !isValid }"
       :type="type"
       :value="modelValue"
       @input="$emit('update:modelValue', $event.target.value)"
       v-bind="$attrs"
     />
     <p
-        v-if="isValid.status === 'invalid'"
+        v-if="!isValid"
         class="input-p"
-    >{{ isValid.message }}</p>
+    >{{ notValidMessage }}</p>
   </div>
 </template>
 
@@ -38,8 +38,11 @@ defineProps({
   },
   isValid: {
     required: false,
-    type: Object,
-    default: () => ({}),
+    type: Boolean,
+  },
+  notValidMessage: {
+    required: false,
+    type: String,
   }
 })
 </script>
@@ -64,6 +67,7 @@ defineProps({
   border-radius: 5px;
   border: 1px solid #4e4e4e;
   padding-left: 10px;
+  outline: none;
 }
 
 .main-input.invalid {
